@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      containers:
+      - name: springboot-app
+        image: 302263049651.dkr.ecr.us-east-2.amazonaws.com/springboot-app:latest
+        ports:
+        - containerPort: 9090
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-service
+spec:
+  type: LoadBalancer  # Change from ClusterIP to LoadBalancer
+
+  selector:
+    app: springboot-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9090
